@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "BasicMultiplayerGameVS/1.0.0": {
+        "runtime": {
+          "BasicMultiplayerGameVS.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "BasicMultiplayerGameVS/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
