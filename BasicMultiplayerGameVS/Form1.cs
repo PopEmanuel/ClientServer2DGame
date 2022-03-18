@@ -55,6 +55,7 @@ namespace BasicMultiplayerGameVS
 
         private void startGame()
         {
+            
             start = true;
             this.lblIp.Hide();
             this.btnClient.Hide();
