@@ -7,6 +7,8 @@ using BasicMultiplayerGameVS.Repository;
 using BasicMultiplayerGameVS.Entities.Player;
 using BasicMultiplayerGameVS.Exceptions;
 using BasicMultiplayerGameVS.Enums;
+using System.Net.Sockets;
+using System.Net;
 
 namespace BasicMultiplayerGameVS.Controller
 {
@@ -79,9 +81,45 @@ namespace BasicMultiplayerGameVS.Controller
             }
         }
 
+        public void launchServer(String ip)
+        {
+
+            IPAddress ipaddr = IPAddress.Parse(ip);
+            System.Net.Sockets.TcpListener server = new TcpListener(ipaddr, 9999);
+            System.Diagnostics.Debug.WriteLine(ipaddr.ToString());
+            // we set our IP address as server's address, and we also set the port: 9999
+            System.Diagnostics.Debug.WriteLine("beforewhile");
+            server.Start();
+            System.Diagnostics.Debug.WriteLine("after start");
+            while (true)   //we wait for a connection
+            {
+                System.Diagnostics.Debug.WriteLine("inside while");
+                TcpClient client = server.AcceptTcpClient();  //if a connection exists, the server will accept it
+
+                NetworkStream ns = client.GetStream(); //networkstream is used to send/receive messages
+
+                byte[] hello = new byte[100];   //any message must be serialized (converted to byte array)
+                hello = Encoding.Default.GetBytes("hello world");  //conversion string => byte array
+
+                ns.Write(hello, 0, hello.Length);     //sending the message
+                System.Diagnostics.Debug.WriteLine("while");
+                while (client.Connected)  //while the client is connected, we look for incoming messages
+                {
+                    byte[] msg = new byte[1024];     //the messages arrive as byte array
+                    ns.Read(msg, 0, msg.Length);   //the same networkstream reads the message sent by the client
+                  
+                   // Console.WriteLine(encoder.GetString(msg).Trim('')); //now , we write the message as string
+                }
+            }
+
+
+        }
 
         public Boolean createServer(String ip)
         {
+            Thread thread = new Thread(() => launchServer(ip));
+            thread.Start();
+
             return true;
         }
 
