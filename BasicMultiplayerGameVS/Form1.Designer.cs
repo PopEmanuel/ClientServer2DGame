@@ -53,6 +53,10 @@ namespace BasicMultiplayerGameVS
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
+            this.btnServer = new System.Windows.Forms.Button();
+            this.btnClient = new System.Windows.Forms.Button();
+            this.txtIp = new System.Windows.Forms.TextBox();
+            this.lblIp = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -64,11 +68,51 @@ namespace BasicMultiplayerGameVS
             this.label1.TabIndex = 0;
             this.label1.Text = "label1";
             // 
+            // btnServer
+            // 
+            this.btnServer.Location = new System.Drawing.Point(239, 267);
+            this.btnServer.Name = "btnServer";
+            this.btnServer.Size = new System.Drawing.Size(215, 78);
+            this.btnServer.TabIndex = 1;
+            this.btnServer.Text = "Server";
+            this.btnServer.UseVisualStyleBackColor = true;
+            this.btnServer.Click += new System.EventHandler(this.btnServer_Click);
+            // 
+            // btnClient
+            // 
+            this.btnClient.Location = new System.Drawing.Point(653, 267);
+            this.btnClient.Name = "btnClient";
+            this.btnClient.Size = new System.Drawing.Size(215, 78);
+            this.btnClient.TabIndex = 2;
+            this.btnClient.Text = "Client";
+            this.btnClient.UseVisualStyleBackColor = true;
+            this.btnClient.Click += new System.EventHandler(this.btnClient_Click);
+            // 
+            // txtIp
+            // 
+            this.txtIp.Location = new System.Drawing.Point(446, 125);
+            this.txtIp.Name = "txtIp";
+            this.txtIp.Size = new System.Drawing.Size(217, 27);
+            this.txtIp.TabIndex = 3;
+            // 
+            // lblIp
+            // 
+            this.lblIp.AutoSize = true;
+            this.lblIp.Location = new System.Drawing.Point(342, 128);
+            this.lblIp.Name = "lblIp";
+            this.lblIp.Size = new System.Drawing.Size(69, 20);
+            this.lblIp.TabIndex = 4;
+            this.lblIp.Text = "Write ip :";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1182, 753);
+            this.Controls.Add(this.lblIp);
+            this.Controls.Add(this.txtIp);
+            this.Controls.Add(this.btnClient);
+            this.Controls.Add(this.btnServer);
             this.Controls.Add(this.label1);
             this.MaximumSize = new System.Drawing.Size(1200, 800);
             this.MinimumSize = new System.Drawing.Size(1200, 800);
@@ -110,7 +154,12 @@ namespace BasicMultiplayerGameVS
         
 
         #endregion
-
+        private Controller.Service service;
+        private bool start = false;
         public Label label1;
+        private Button btnServer;
+        private Button btnClient;
+        private TextBox txtIp;
+        private Label lblIp;
     }
 }

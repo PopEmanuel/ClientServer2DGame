@@ -55,19 +55,22 @@ namespace BasicMultiplayerGameVS.Repository
             
             Room room1 = new Room(id, name, imagePath, size, _parentForm);
             System.Diagnostics.Debug.WriteLine("CREATED ROOM ID IS : " + room1.Id + " " + id);
-            room1.Paint += paintingRoom;
+            //room1.Paint += paintingRoom;
             room1.Click += Room1_Click;
-            room1.PreviewKeyDown += Room1_PreviewKeyDown;
+     
             System.Diagnostics.Debug.WriteLine("Added room1");
             rooms.Add(room1);
             
         }
 
-        private void Room1_PreviewKeyDown(object? sender, PreviewKeyDownEventArgs e)
+        public void start()
         {
-            _parentForm.label1.Text = "Key down on room";
-        }
+            Room room1 = getRoomById(CurrentRoomId);
+            room1.Paint += paintingRoom;
 
+            room1.Invalidate();
+
+        }
         private void Room1_Click(object? sender, EventArgs e)
         {
             _parentForm.label1.Text = "ROOM CLICKED";
