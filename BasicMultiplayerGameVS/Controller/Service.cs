@@ -79,6 +79,22 @@ namespace BasicMultiplayerGameVS.Controller
             }
         }
 
+
+        public Boolean createServer(String ip)
+        {
+            return true;
+        }
+
+        public Boolean createClient(String ip)
+        {
+            return true;
+        }
+
+        public void start()
+        {
+            _repository.start();
+        }
+
         public void InvalidateRoom()
         {
             try

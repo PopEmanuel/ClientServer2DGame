@@ -7,7 +7,7 @@ namespace BasicMultiplayerGameVS
 {
     public partial class Form1 : Form
     {
-        Service service;
+        
         
 
         public Form1()
@@ -51,6 +51,33 @@ namespace BasicMultiplayerGameVS
             
 
             //service.InvalidateRoom();
+        }
+
+        private void startGame()
+        {
+            start = true;
+            this.lblIp.Hide();
+            this.btnClient.Hide();
+            this.btnServer.Hide();
+            this.txtIp.Hide();
+
+            service.start();
+        }
+
+        private void btnServer_Click(object sender, EventArgs e)
+        {
+
+            if (service.createServer(txtIp.Text.ToString()))
+                startGame();
+        }
+
+        private void btnClient_Click(object sender, EventArgs e)
+        {
+
+            if(service.createClient(txtIp.Text.ToString()))
+            {
+                startGame();
+            }
         }
     }
 }
