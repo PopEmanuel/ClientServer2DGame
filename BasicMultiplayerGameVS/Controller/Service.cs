@@ -98,17 +98,19 @@ namespace BasicMultiplayerGameVS.Controller
 
                 NetworkStream ns = client.GetStream(); //networkstream is used to send/receive messages
 
-                byte[] hello = new byte[100];   //any message must be serialized (converted to byte array)
+                byte[] hello = new byte[256];   //any message must be serialized (converted to byte array)
                 hello = Encoding.Default.GetBytes("hello world");  //conversion string => byte array
 
                 ns.Write(hello, 0, hello.Length);     //sending the message
                 System.Diagnostics.Debug.WriteLine("while");
                 while (client.Connected)  //while the client is connected, we look for incoming messages
                 {
-                    byte[] msg = new byte[1024];     //the messages arrive as byte array
-                    ns.Read(msg, 0, msg.Length);   //the same networkstream reads the message sent by the client
-                  
-                   // Console.WriteLine(encoder.GetString(msg).Trim('')); //now , we write the message as string
+                    System.Diagnostics.Debug.WriteLine("waiting client message");
+                    byte[] msg = new byte[256];     //the messages arrive as byte array
+                    Int32 bytes = ns.Read(msg, 0, msg.Length);   //the same networkstream reads the message sent by the client
+                    String response = System.Text.Encoding.ASCII.GetString(msg, 0, bytes);
+                    System.Diagnostics.Debug.WriteLine("Received the message :" + response);
+                    // Console.WriteLine(encoder.GetString(msg).Trim('')); //now , we write the message as string
                 }
             }
 
