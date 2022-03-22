@@ -115,6 +115,40 @@ namespace BasicMultiplayerGameVS.Controller
 
         }
 
+        public void launchClient(String ip)
+        {
+            TcpClient client = new TcpClient(ip, 9999);
+           // client.Connect(ip, 9999);
+            System.Diagnostics.Debug.WriteLine("Connected to server");
+            // Translate the passed message into ASCII and store it as a Byte array.
+         
+
+            // Get a client stream for reading and writing.
+            //  Stream stream = client.GetStream();
+
+            NetworkStream stream = client.GetStream();
+
+            // Buffer to store the response bytes.
+            byte[] data = new byte[256];
+
+            // String to store the response ASCII representation.
+            String responseData = String.Empty;
+
+            // Read the first batch of the TcpServer response bytes.
+            Int32 bytes = stream.Read(data, 0, data.Length);
+            responseData = System.Text.Encoding.ASCII.GetString(data, 0, bytes);
+            System.Diagnostics.Debug.WriteLine("Received: {0}", responseData);
+
+            data = Encoding.Default.GetBytes("Salut");
+            // Send the message to the connected TcpServer.
+            stream.Write(data, 0, data.Length);
+            stream.Write(data, 0, data.Length);
+
+            System.Diagnostics.Debug.WriteLine("Sent: {0}", "Salut");
+
+            
+        }
+
         public Boolean createServer(String ip)
         {
             Thread thread = new Thread(() => launchServer(ip));
@@ -125,6 +159,8 @@ namespace BasicMultiplayerGameVS.Controller
 
         public Boolean createClient(String ip)
         {
+            Thread thread = new Thread(() => launchClient(ip));
+            thread.Start();
             return true;
         }
 
