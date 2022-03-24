@@ -158,6 +158,7 @@ namespace BasicMultiplayerGameVS.Repository
             if (!isPlayerIdDefined(id))
                 throw new InvalidIdException("Id is not defined, can't move player");
 
+            System.Diagnostics.Debug.WriteLine("moving player " + id.ToString());
             Player player = getPlayerById(id);
             if (mv == Movement.Left)
                 player.Move_x(Player._maxMovement);
@@ -206,7 +207,7 @@ namespace BasicMultiplayerGameVS.Repository
         {
             if (!isRoomIdDefined(CurrentRoomId))
                 throw new InvalidIdException("Room id doesn't exist");
-            _parentForm.label1.Text = "here";
+           // _parentForm.label1.Text = "here";
             getRoomById(CurrentRoomId).Invalidate();
         }
     }

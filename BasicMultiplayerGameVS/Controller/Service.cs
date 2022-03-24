@@ -16,6 +16,7 @@ namespace BasicMultiplayerGameVS.Controller
     {
         private Repo _repository;
         private Form1 _parentForm;
+        private NetworkStream stream;
 
         public int CurrentRoomId { get { return _repository.CurrentRoomId; } set { _repository.CurrentRoomId = value; } }
         public int CurrentPlayerId { get { return _repository.CurrentPlayerId; } set { _repository.CurrentPlayerId = value; } }
@@ -62,6 +63,16 @@ namespace BasicMultiplayerGameVS.Controller
             try
             {
                 _repository.movePlayerX(id, mv);
+                if(id == CurrentPlayerId)
+                {
+                    byte[] msg = new byte[256];
+                    if (mv == Movement.Right)
+                        msg = Encoding.Default.GetBytes("movedLeft");
+                    else
+                        msg = Encoding.Default.GetBytes("movedRight");
+                    stream.Write(msg, 0, msg.Length);
+                }
+                
             }
             catch (Exception e)
             {
@@ -74,6 +85,16 @@ namespace BasicMultiplayerGameVS.Controller
             try
             {
                 _repository.movePlayerY(id, mv);
+                if(id == CurrentPlayerId)
+                {
+                    byte[] msg = new byte[256];
+                    if (mv == Movement.Up)
+                        msg = Encoding.Default.GetBytes("movedUp");  //conversion string => byte array
+                    else
+                        msg = Encoding.Default.GetBytes("movedDown");
+                    stream.Write(msg, 0, msg.Length);
+                }
+                
             }
             catch (Exception e)
             {
@@ -96,20 +117,42 @@ namespace BasicMultiplayerGameVS.Controller
                 System.Diagnostics.Debug.WriteLine("inside while");
                 TcpClient client = server.AcceptTcpClient();  //if a connection exists, the server will accept it
 
-                NetworkStream ns = client.GetStream(); //networkstream is used to send/receive messages
+                stream = client.GetStream(); //networkstream is used to send/receive messages
 
                 byte[] hello = new byte[256];   //any message must be serialized (converted to byte array)
                 hello = Encoding.Default.GetBytes("hello world");  //conversion string => byte array
 
-                ns.Write(hello, 0, hello.Length);     //sending the message
+                stream.Write(hello, 0, hello.Length);     //sending the message
                 System.Diagnostics.Debug.WriteLine("while");
                 while (client.Connected)  //while the client is connected, we look for incoming messages
                 {
                     System.Diagnostics.Debug.WriteLine("waiting client message");
                     byte[] msg = new byte[256];     //the messages arrive as byte array
-                    Int32 bytes = ns.Read(msg, 0, msg.Length);   //the same networkstream reads the message sent by the client
+                    Int32 bytes = stream.Read(msg, 0, msg.Length);   //the same networkstream reads the message sent by the client
                     String response = System.Text.Encoding.ASCII.GetString(msg, 0, bytes);
                     System.Diagnostics.Debug.WriteLine("Received the message :" + response);
+
+                    if(response.Contains("moved"))
+                    {
+                        System.Diagnostics.Debug.WriteLine("MESSAGE CONTAINST MOVEMENT");
+                        if (response == "movedUp")
+                        {
+                            this.movePlayerY(2, Movement.Up);
+                        }               
+                        if (response == "movedDown")
+                            this.movePlayerY(2, Movement.Down);
+                        if (response == "movedLeft")
+                        {
+      
+                            this.movePlayerX(2, Movement.Right);
+                        }
+                            
+                        if (response == "movedRight")
+                            this.movePlayerX(2, Movement.Left);
+
+                        this.InvalidateRoom();
+
+                    }
                     // Console.WriteLine(encoder.GetString(msg).Trim('')); //now , we write the message as string
                 }
             }
@@ -128,7 +171,7 @@ namespace BasicMultiplayerGameVS.Controller
             // Get a client stream for reading and writing.
             //  Stream stream = client.GetStream();
 
-            NetworkStream stream = client.GetStream();
+            stream = client.GetStream();
 
             // Buffer to store the response bytes.
             byte[] data = new byte[256];
@@ -143,8 +186,37 @@ namespace BasicMultiplayerGameVS.Controller
 
             data = Encoding.Default.GetBytes("Salut");
             // Send the message to the connected TcpServer.
-            stream.Write(data, 0, data.Length);
-            stream.Write(data, 0, data.Length);
+            while(client.Connected)
+            {
+                System.Diagnostics.Debug.WriteLine("waiting server message");
+                byte[] msg = new byte[256];     //the messages arrive as byte array
+                bytes = stream.Read(msg, 0, msg.Length);   //the same networkstream reads the message sent by the client
+                String response = System.Text.Encoding.ASCII.GetString(msg, 0, bytes);
+                System.Diagnostics.Debug.WriteLine("Received the message :" + response);
+
+                if (response.Contains("moved"))
+                {
+                    System.Diagnostics.Debug.WriteLine("MESSAGE CONTAINST MOVEMENT");
+                    if (response == "movedUp")
+                    {
+
+                        this.movePlayerY(1, Movement.Up);
+                    }
+                    if (response == "movedDown")
+                        this.movePlayerY(1, Movement.Down);
+                    if (response == "movedLeft")
+                    {
+
+                        this.movePlayerX(1, Movement.Right);
+                    }
+
+                    if (response == "movedRight")
+                        this.movePlayerX(1, Movement.Left);
+
+                    this.InvalidateRoom();
+
+                }
+            }
 
             System.Diagnostics.Debug.WriteLine("Sent: {0}", "Salut");
 

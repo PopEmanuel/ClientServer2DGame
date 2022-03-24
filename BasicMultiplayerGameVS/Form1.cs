@@ -74,7 +74,7 @@ namespace BasicMultiplayerGameVS
 
         private void btnClient_Click(object sender, EventArgs e)
         {
-
+            this.service.CurrentPlayerId = 2;
             if(service.createClient(txtIp.Text.ToString()))
             {
                 startGame();
